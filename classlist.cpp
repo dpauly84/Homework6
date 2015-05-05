@@ -30,15 +30,16 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
+    // Load enrllFile students into binary search tree
     if (!student_file_to_tree(enrollFile, myTree)) {
         cout << "Enrollment file not successully loaded into binary tree" << endl;
     }
-    tree_inorder(myTree, cout);
+    // Remove drop students from binary search tree
     remove_drop_students(dropFile, myTree);
 
     outFile << "Class List for CS 300:" << endl;
 
-//    tree_inorder(myTree, cout);
+    // Write contents of tree to outFile with inorder traversal
     tree_inorder(myTree, outFile);
 
     cout << "The class list was saved in the file classlist.txt" << endl;
