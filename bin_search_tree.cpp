@@ -4,7 +4,7 @@
 // Assignment Number: 6
 // Last Changed: May 5, 2015
 
-// Program Desc
+// Program Description
 
 #include "bin_search_tree.hpp"
 #include <iostream>
