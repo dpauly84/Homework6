@@ -37,6 +37,7 @@ int main() {
     // Load enrollFile students into binary search tree
     if (!student_file_to_tree(enrollFile, myTree)) {
         cout << "Enrollment file not successully loaded into binary tree" << endl;
+        exit(EXIT_FAILURE);
     }
     // Remove drop students from binary search tree
     remove_drop_students(dropFile, myTree);
