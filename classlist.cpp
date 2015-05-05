@@ -4,7 +4,10 @@
 // Assignment Number: 6
 // Last Changed: May 5, 2015
 
-// Program Desc
+// Program reads student names from the class enrollment file and stores them in a
+// binary search tree, disregarding duplicates. The program then reads name from
+// the class droplist file and removes the entries from the binary search tree.
+// Finally, it writes the binary search tree in alphabetical order to classlist.txt
 
 #include "classlist.hpp"
 #include <iostream>
@@ -25,12 +28,13 @@ int main() {
     Tree myTree = new Node;
     tree_init(myTree);
 
+    // Ensure both input files are opened correctly
     if (!(enrollFile.is_open()) && !(dropFile.is_open())) {
         cout << "Error opening one of the files\n" << "Goodbye" << endl;
         exit(EXIT_FAILURE);
     }
 
-    // Load enrllFile students into binary search tree
+    // Load enrollFile students into binary search tree
     if (!student_file_to_tree(enrollFile, myTree)) {
         cout << "Enrollment file not successully loaded into binary tree" << endl;
     }
@@ -46,14 +50,16 @@ int main() {
 
     tree_makenull(myTree);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
+// Remove students who are in the file from the tree.
 bool remove_drop_students(std::ifstream &inFile, Tree &t) {
     Key student; // student to be removed from tree
     string line; // Line from file
     bool flag;
-    flag = t != NULL;
+    flag = (t != NULL);
+
     while (!inFile.eof() && flag) { // stop when end of file (EOF) is reached
         getline(inFile, line);
         if (line.length() > 0) { // ensure something was read into the line
@@ -61,18 +67,16 @@ bool remove_drop_students(std::ifstream &inFile, Tree &t) {
             tree_remove(t, student);
         }
     }
-    if (!flag) {
-        cout << "Tree is null or nothing found in file." << endl;
-    }
     return flag;
 }
 
 // Reads student names from file and inserts them into a binary search tree.
 bool student_file_to_tree(ifstream &inFile, Tree &t) {
     Key student; // student to be inserted into tree
-    string line; // Line from part text file
+    string line; // Line from file
     bool flag;
-    flag = t != NULL;
+    flag = (t != NULL);
+
     while (!inFile.eof() && flag) { // stop when end of file (EOF) is reached
         getline(inFile, line);
         if (line.length() > 0) { // ensure something was read into the line
@@ -87,12 +91,11 @@ bool student_file_to_tree(ifstream &inFile, Tree &t) {
 // Converts student information line from file to:
 // lastName, firstName middleName
 Key read_student_record(std::string line) {
-    string name[4];
+    string name[4];  // string array to hold class, first, middle and last names
     stringstream ss; // Stringstream to hold line from file
     Key returnKey;
 
     ss << line; // Insert line into Stringstream
-//    read_from_string_stream(ss, 7); // ignore first 7 characters (CS 300:)
 
     for (int i = 0; i < 4; ++i) {
         getline(ss, name[i], ':');

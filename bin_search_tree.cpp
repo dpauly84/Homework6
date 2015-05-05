@@ -4,8 +4,6 @@
 // Assignment Number: 6
 // Last Changed: May 5, 2015
 
-// Program Descriptin
-
 #include "bin_search_tree.hpp"
 #include <iostream>
 #include <cmath>
@@ -31,8 +29,8 @@ Node *Node::rightchild() { return m_rightchild; }
 
 int Node::num_children() {
     if (m_rightchild != NULL && m_leftchild != NULL) return 2;
-    else if (m_rightchild != NULL || m_leftchild != NULL) return 1;
-    else return 0;
+    else if (m_rightchild == NULL && m_leftchild == NULL) return 0;
+    else return 1;
 }
 
 // Mutators
@@ -52,13 +50,16 @@ void Node::replace_with_successor() {
     Node *originalNode = this;
     Node *successorNode = NULL;
 
-    if (this->rightchild()) {
+    // Go to rightChild
+    if (originalNode->rightchild()) {
         successorNode = this->rightchild();
+        // Continually go to leftChild
         while (successorNode->leftchild()) {
             successorNode = successorNode->leftchild();
         }
     }
 
+    // Successor has been found: replace
     originalNode->set_key(successorNode->key());
     if (successorNode->parent() == originalNode) {
         originalNode->set_rightchild(successorNode->rightchild());
@@ -71,7 +72,26 @@ void Node::replace_with_successor() {
 
 void Node::replace_with_predecessor() {
     // precessor is the maximum value in its left subtree
+    Node *originalNode = this;
+    Node *successorNode = NULL;
 
+    // Go to leftChild
+    if (originalNode->leftchild()) {
+        successorNode = originalNode->leftchild();
+        // Continually go to rightChild
+        while (successorNode->rightchild()) {
+            successorNode = successorNode->rightchild();
+        }
+    }
+
+    // Successor has been found: replace
+    originalNode->set_key(successorNode->key());
+    if (successorNode->parent() == originalNode) {
+        originalNode->set_leftchild(successorNode->leftchild());
+    } else {
+        successorNode->parent()->set_rightchild(NULL);
+    }
+    delete successorNode;
 }
 
 // Functions to implement binary search tree operations
@@ -95,166 +115,169 @@ void tree_makenull(Tree t) {
 }
 
 // create a new node for a tree
-    Node *tree_makenode(Key k, Node *parent) {
-        Node *newNode = new Node;
-        newNode->set_key(k);
-        newNode->set_parent(parent);
-        newNode->set_leftchild(NULL);
-        newNode->set_rightchild(NULL);
-        return newNode;
-    }
+Node *tree_makenode(Key k, Node *parent) {
+    Node *newNode = new Node;
+    newNode->set_key(k);
+    newNode->set_parent(parent);
+    newNode->set_leftchild(NULL);
+    newNode->set_rightchild(NULL);
+    return newNode;
+}
 
 // return pointer to node with key k if found in tree, otherwise NULL
-    Node *tree_search(Key k, Tree t) {
-        Node *returnNode = NULL;
-        if (tree_empty(t)) {
-            return NULL;
-        }
-        if (key_isequal(k, t->key())) {
-            returnNode = t;
-        }
-        else if (key_lessthan(k, t->key()) && t->leftchild() != NULL) {
-            returnNode = tree_search(k, t->leftchild());
+Node *tree_search(Key k, Tree t) {
+    Node *returnNode = NULL;
+    if (tree_empty(t)) {
+        return NULL;
+    }
+    if (key_isequal(k, t->key())) {
+        returnNode = t;
+    }
+    else if (key_lessthan(k, t->key()) && t->leftchild() != NULL) {
+        returnNode = tree_search(k, t->leftchild());
+    }
+    else {
+        if (t->rightchild() != NULL) {
+            returnNode = tree_search(k, t->rightchild());
         }
         else {
-            if (t->rightchild() != NULL) {
-                returnNode = tree_search(k, t->rightchild());
-            }
-            else {
-                returnNode = NULL;
-            }
+            returnNode = NULL;
         }
-        return returnNode;
     }
+    return returnNode;
+}
 
 // add a node whose key is k to the tree
-    void tree_insert(Node *&t, Key k) {
-        if (tree_empty(t)) {                        // Tree is empty
-            t->set_key(k);
-        }
-        else if (key_isequal(t->key(), k)) {    // Skip duplicates
-            return;
-        }
-        else if (key_lessthan(k, t->key())) {    // Go to left
-            if (t->leftchild() == NULL) {
-                t->set_leftchild(tree_makenode(k, t));
-            }
-            else {
-                Node *leftNodeCopy = t->leftchild();
-                tree_insert(leftNodeCopy, k);
-            }
-        }
-        else {                                    // Go to right
-            if (t->rightchild() == NULL) {
-                t->set_rightchild(tree_makenode(k, t));
-            }
-            else {
-                Node *rightNodeCopy = t->rightchild();
-                tree_insert(rightNodeCopy, k);
-            }
-        }
-
+void tree_insert(Node *&t, Key k) {
+    if (tree_empty(t)) {                        // Tree is empty
+        t->set_key(k);
     }
+    else if (key_isequal(t->key(), k)) {    // Skip duplicates
+        return;
+    }
+    else if (key_lessthan(k, t->key())) {    // Go to left
+        if (t->leftchild() == NULL) {
+            t->set_leftchild(tree_makenode(k, t));
+        }
+        else {
+            Node *leftNodeCopy = t->leftchild();
+            tree_insert(leftNodeCopy, k);
+        }
+    }
+    else {                                    // Go to right
+        if (t->rightchild() == NULL) {
+            t->set_rightchild(tree_makenode(k, t));
+        }
+        else {
+            Node *rightNodeCopy = t->rightchild();
+            tree_insert(rightNodeCopy, k);
+        }
+    }
+
+}
 
 // remove the node with key k from the tree if it is found
-    void tree_remove(Node *t, Key k) {
-        Node *removeNode = tree_search(k, t);
-        if (removeNode == NULL) return;                        // Nothing to remove
-        // Node is leaf
-        if (removeNode->leftchild() == NULL && removeNode->rightchild() == NULL) {
-            if (key_lessthan(removeNode->key(), removeNode->parent()->key())) {
-                removeNode->parent()->set_leftchild(NULL);
-            }
-            else {
-                removeNode->parent()->set_rightchild(NULL);
+void tree_remove(Node *t, Key k) {
+    Node *removeNode = tree_search(k, t);
+    if (removeNode == NULL) return;                        // Nothing to remove
 
-            }
-            delete removeNode;
-            return;
+    // Node is leaf
+    if (removeNode->num_children() == 0) {
+        if (key_lessthan(removeNode->key(), removeNode->parent()->key())) {
+            removeNode->parent()->set_leftchild(NULL);
         }
-            // Node has two children
-        else if (removeNode->leftchild() != NULL && removeNode->rightchild() != NULL) {
-            removeNode->replace_with_successor();
-        }
-            // Node has one child
         else {
-            Node *parentNode = removeNode->parent();
-            Node *childNode = NULL;
-            childNode = (removeNode->leftchild() ? removeNode->leftchild() : removeNode->rightchild());
-            childNode->set_parent(parentNode);
-            if (key_lessthan(removeNode->key(), parentNode->key())) {            // link to left child
-                parentNode->set_leftchild(childNode);
-            }
-            else {                                                            // link to right
-                parentNode->set_rightchild(childNode);
-            }
-            delete removeNode;
-            return;
+            removeNode->parent()->set_rightchild(NULL);
         }
+        delete removeNode;
+        return;
     }
+
+    // Node has one child
+    else if (removeNode->num_children() == 1) {
+        Node *parentNode = removeNode->parent();
+        Node *childNode = NULL;
+        // Determine if child Node is on left or right side
+        childNode = (removeNode->leftchild() ? removeNode->leftchild() : removeNode->rightchild());
+
+        childNode->set_parent(parentNode); // Assign child Node to remove Node's parent
+        if (key_lessthan(removeNode->key(), parentNode->key())) {
+            parentNode->set_leftchild(childNode);                   // link to left child
+        }
+        else {                                                      // link to right
+            parentNode->set_rightchild(childNode);
+        }
+        delete removeNode;
+        return;
+    }
+
+    // Node has one child
+    else {
+        removeNode->replace_with_successor();
+    }
+}
 
 // traverse tree in preorder and write keys to file
-    void tree_preorder(Node *n, std::ostream &os) {
-        if (n != NULL && tree_empty(n)) {
-            os << "Tree is empty" << std::endl;
-            return;
-        }
-        if (n) {
-            os << n->key() << std::endl;
-            tree_preorder(n->leftchild(), os);
-            tree_preorder(n->rightchild(), os);
-        }
+void tree_preorder(Node *n, std::ostream &os) {
+    if (n != NULL && tree_empty(n)) {
+        os << "Tree is empty" << std::endl;
+        return;
     }
+    if (n) {
+        os << n->key() << std::endl;
+        tree_preorder(n->leftchild(), os);
+        tree_preorder(n->rightchild(), os);
+    }
+}
 
 // traverse tree in postorder and write keys to file
-    void tree_postorder(Node *n, std::ostream &os) {
-        if (n != NULL && tree_empty(n)) {
-            os << "Tree is empty" << std::endl;
-            return;
-        }
-        if (n) {
-            tree_postorder(n->leftchild(), os);
-            tree_postorder(n->rightchild(), os);
-            os << n->key() << std::endl;
-        }
+void tree_postorder(Node *n, std::ostream &os) {
+    if (n != NULL && tree_empty(n)) {
+        os << "Tree is empty" << std::endl;
+        return;
     }
+    if (n) {
+        tree_postorder(n->leftchild(), os);
+        tree_postorder(n->rightchild(), os);
+        os << n->key() << std::endl;
+    }
+}
 
 // traverse tree in inorder and write keys to file
-    void tree_inorder(Node *n, std::ostream &os) {
-        if (n != NULL && tree_empty(n)) {
-            os << "Tree is empty" << std::endl;
-            return;
-        }
-        if (n == NULL) return;
-        tree_inorder(n->leftchild(), os);
-        os << "\n" << n->key();
-        tree_inorder(n->rightchild(), os);
+void tree_inorder(Node *n, std::ostream &os) {
+    if (n != NULL && tree_empty(n)) {
+        os << "Tree is empty" << std::endl;
+        return;
     }
+    if (n == NULL) return;
+    tree_inorder(n->leftchild(), os);
+    os << "\n" << n->key();
+    tree_inorder(n->rightchild(), os);
+}
 
 // returns true if t is empty and false otherwise
-    bool tree_empty(Tree t) {
-        return t->key() == "";
-    }
+bool tree_empty(Tree t) {
+    return t->key() == "";
+}
 
 // returns the height of the tree
-    int tree_height(Tree t) {
-        int leftInt = 0;
-        int rightInt = 0;
-        if (tree_empty(t) || t == NULL) {
-            std::cout << "empty" << std::endl;
-            return 0;
-        }
-        if (t->rightchild()) {
-            ++rightInt;
-            std::cout << "rightInt" << rightInt << std::endl;
-            rightInt = tree_height(t->rightchild());
-        }
-        if (t->leftchild()) {
-            ++leftInt;
-            std::cout << "leftInt" << leftInt << std::endl;
-            rightInt = tree_height(t->leftchild());
-        }
-
-
-        return (int) (fmax(leftInt, rightInt) + 1);
+int tree_height(Tree t) {
+    int leftInt = 0;
+    int rightInt = 0;
+    if (tree_empty(t) || t == NULL) {
+        std::cout << "empty" << std::endl;
+        return 0;
     }
+    if (t->rightchild()) {
+        ++rightInt;
+        std::cout << "rightInt" << rightInt << std::endl;
+        rightInt = tree_height(t->rightchild());
+    }
+    if (t->leftchild()) {
+        ++leftInt;
+        std::cout << "leftInt" << leftInt << std::endl;
+        rightInt = tree_height(t->leftchild());
+    }
+
+    return (fmax(leftInt, rightInt) + 1); // type conversion from double to int
+}
