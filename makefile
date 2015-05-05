@@ -1,18 +1,15 @@
 CC=g++ -Wall
 
-all: parts3
+all: classlist
 
-parts3: utils.o array_list.o parts3.hpp parts3.cpp
-	$(CC) -o parts3 parts3.cpp array_list.o utils.o
+classlist: bin_search_tree.o classlist.hpp classlist.cpp
+	$(CC) -o classlist classlist.cpp bin_search_tree.o
 
-array_list.o: array_list.hpp array_list.cpp
-	$(CC) -c array_list.cpp
-
-utils.o: utils.hpp utils.cpp
-	$(CC) -c utils.cpp
+bin_search_tree.o: bin_search_tree.hpp bin_search_tree.cpp
+	$(CC) -c bin_search_tree.cpp
 
 tidy :
-	rm -f utils.o array_list.o core
+	rm -f bin_search_tree.o core
 
 clean :
-	rm -f parts3 utils.o array_list.o core
+	rm -f classlist bin_search_tree.o core

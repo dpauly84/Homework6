@@ -2,7 +2,7 @@
 // Author: Derek Pauly
 // Student ID: s829f376
 // Assignment Number: 6
-// Last Changed: April 29, 2015
+// Last Changed: May 5, 2015
 
 // Program Desc
 
@@ -34,11 +34,12 @@ int main() {
     if (!student_file_to_tree(enrollFile, myTree)) {
         cout << "Enrollment file not successully loaded into binary tree" << endl;
     }
-
+    tree_inorder(myTree, cout);
     remove_drop_students(dropFile, myTree);
 
     outFile << "Class List for CS 300:" << endl;
 
+//    tree_inorder(myTree, cout);
     tree_inorder(myTree, outFile);
 
     cout << "The class list was saved in the file classlist.txt" << endl;
@@ -86,72 +87,16 @@ bool student_file_to_tree(ifstream &inFile, Tree &t) {
 // Converts student information line from file to:
 // lastName, firstName middleName
 Key read_student_record(std::string line) {
-    string name[3];
+    string name[4];
     stringstream ss; // Stringstream to hold line from file
     Key returnKey;
 
     ss << line; // Insert line into Stringstream
-    read_from_string_stream(ss, 7); // ignore first 7 characters (CS 300:)
+//    read_from_string_stream(ss, 7); // ignore first 7 characters (CS 300:)
 
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 4; ++i) {
         getline(ss, name[i], ':');
     }
-    returnKey = name[2] + ", " + name[0] + " " + name[1]; // format Key
+    returnKey = name[3] + ", " + name[1] + " " + name[2]; // format Key
     return returnKey;
 }
-
-// Reads a certain amount of characters (length) from the stringstream
-// returns string of the characters read
-string read_from_string_stream(std::stringstream &fromStr, int length) {
-    char tmp[7] = ""; // Temporary C_String
-    fromStr.read(tmp, length);
-    string returnStr(tmp); // convert tmp C_String to string for return
-    return returnStr;
-}
-
-//Tree myTree = new Node;
-//cout << "myTree before init: " << myTree << endl;
-//tree_init(myTree);
-//cout << "mytree after init: " << myTree << endl;
-//
-//Key aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll;
-//aa = "60";
-//bb = "20";
-//cc = "70";
-//dd = "10";
-//ee = "40";
-//ff = "30";
-//gg = "50";
-////hh= "7";
-////ii = "13";
-////jj = "66";
-////kk = "89";
-////ll = "95";
-//
-//tree_postorder(myTree, cout);
-//tree_insert(myTree, aa);
-//tree_insert(myTree, bb);
-//tree_insert(myTree, cc);
-//tree_insert(myTree, dd);
-//tree_insert(myTree, ee);
-//tree_insert(myTree, ff);
-//tree_insert(myTree, gg);
-////tree_insert(myTree, hh);
-////tree_insert(myTree, ii);
-////tree_insert(myTree, jj);
-////tree_insert(myTree, kk);
-////tree_insert(myTree, ll);
-//cout << "preorder: " << endl;
-//tree_preorder(myTree, cout);
-//cout << "inorder: " << endl;
-//tree_inorder(myTree, cout);
-//cout << "postorder: " << endl;
-//tree_postorder(myTree, cout);
-//
-//tree_remove(myTree, ee);
-//cout << "preorder: " << endl;
-//tree_preorder(myTree, cout);
-//cout << "inorder: " << endl;
-//tree_inorder(myTree, cout);
-//cout << "postorder: " << endl;
-//tree_postorder(myTree, cout);

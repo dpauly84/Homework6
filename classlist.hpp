@@ -2,7 +2,7 @@
 // Author: Derek Pauly
 // Student ID: s829f376
 // Assignment Number: 6
-// Last Changed: April 29, 2015
+// Last Changed: May 5, 2015
 
 #ifndef _CLASSLIST_HPP_
 #define _CLASSLIST_HPP_
@@ -11,9 +11,9 @@
 #include <string>
 
 const char *ENROLLMENT_FILE = // name of part input file to be read from
-        "/home/shockerpc/ClionProjects/Trial6/enrollment_list";
+        "/home/shockerpc/ClionProjects/Homework6/enrollment_list";
 const char *DROPLIST_FILE = // name of part input file to be read from
-        "/home/shockerpc/ClionProjects/Trial6/drop_list";
+        "/home/shockerpc/ClionProjects/Homework6/drop_list";
 
 Key read_student_record(std::string line);
 std::string read_from_string_stream(std::stringstream &fromStr, int length);
