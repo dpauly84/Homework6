@@ -4,7 +4,7 @@
 // Assignment Number: 6
 // Last Changed: May 5, 2015
 
-// Program Description
+// Program Descriptin
 
 #include "bin_search_tree.hpp"
 #include <iostream>
@@ -16,7 +16,7 @@
 bool key_isequal(Key a, Key b) { return (a == b); }
 
 // returns true if a < b, or false otherwise
-bool key_lessthan(Key a, Key b) { return a.compare(b) < 0 ? true : false; }
+bool key_lessthan(Key a, Key b) { return a.compare(b) < 0; }
 
 // Functions to implement Node methods
 
@@ -106,7 +106,7 @@ Node *tree_makenode(Key k, Node *parent) {
 Node *tree_search(Key k, Tree t) {
     Node *returnNode = NULL;
     if (tree_empty(t)) {
-        returnNode = NULL;
+        return NULL;
     }
     if (key_isequal(k, t->key())) {
 //        std::cout << "Key is found t returned." << std::endl;
@@ -243,7 +243,7 @@ void tree_inorder(Node *n, std::ostream &os) {
 
 // returns true if t is empty and false otherwise
 bool tree_empty(Tree t) {
-    return (t->key() == "") ? true : false;
+    return t->key() == "";
 }
 
 // returns the height of the tree
@@ -266,5 +266,5 @@ int tree_height(Tree t) {
     }
 
 
-    return fmax(leftInt, rightInt) + 1;
+    return (int) (fmax(leftInt, rightInt) + 1);
 }

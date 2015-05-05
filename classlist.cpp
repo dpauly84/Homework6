@@ -7,7 +7,6 @@
 // Program Desc
 
 #include "classlist.hpp"
-#include "bin_search_tree.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -53,7 +52,7 @@ bool remove_drop_students(std::ifstream &inFile, Tree &t) {
     Key student; // student to be removed from tree
     string line; // Line from file
     bool flag;
-    flag = (t == NULL) ? false : true;
+    flag = t != NULL;
     while (!inFile.eof() && flag) { // stop when end of file (EOF) is reached
         getline(inFile, line);
         if (line.length() > 0) { // ensure something was read into the line
@@ -72,7 +71,7 @@ bool student_file_to_tree(ifstream &inFile, Tree &t) {
     Key student; // student to be inserted into tree
     string line; // Line from part text file
     bool flag;
-    flag = (t == NULL ? false : true);
+    flag = t != NULL;
     while (!inFile.eof() && flag) { // stop when end of file (EOF) is reached
         getline(inFile, line);
         if (line.length() > 0) { // ensure something was read into the line

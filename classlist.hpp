@@ -16,7 +16,6 @@ const char *DROPLIST_FILE = // name of part input file to be read from
         "/home/shockerpc/ClionProjects/Homework6/drop_list";
 
 Key read_student_record(std::string line);
-std::string read_from_string_stream(std::stringstream &fromStr, int length);
 bool student_file_to_tree(std::ifstream &inFile, Tree &t);
 bool remove_drop_students(std::ifstream &inFile, Tree &t);
 
