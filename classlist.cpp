@@ -44,7 +44,7 @@ int main() {
 
     cout << "The class list was saved in the file classlist.txt" << endl;
 
-//    tree_makenull(); // TODO
+    tree_makenull(myTree);
 
     return 0;
 }

@@ -39,12 +39,12 @@ public:
     void set_leftchild(Node *l);
     void set_rightchild(Node *r);
 
-    void replace_with_successor();
-    void replace_with_predecessor();
+
 
 private:
     // Private methods
-
+    void replace_with_successor();
+    void replace_with_predecessor();
 
     // Data members
     Key m_key;
