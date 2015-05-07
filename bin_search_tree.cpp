@@ -2,7 +2,7 @@
 // Author: Derek Pauly
 // Student ID: s829f376
 // Assignment Number: 6
-// Last Changed: May 5, 2015
+// Last Changed: May 6, 2015
 
 #include "bin_search_tree.hpp"
 #include <iostream>
@@ -96,11 +96,8 @@ void Node::replace_with_predecessor() {
 
 // Functions to implement binary search tree operations
 // tree initialization - contains what is typically in a constructor
-void tree_init(Tree &t) {
-    t->set_key("");
-    t->set_parent(NULL);
-    t->set_leftchild(NULL);
-    t->set_rightchild(NULL);
+void tree_init(Tree *t) {
+    (*t) = NULL;
 }
 
 // Delete all nodes of a tree - traverse in postorder to delete each child before its parent
@@ -148,29 +145,33 @@ Node *tree_search(Key k, Tree t) {
 }
 
 // add a node whose key is k to the tree
-void tree_insert(Node *&t, Key k) {
-    if (tree_empty(t)) {                        // Tree is empty
-        t->set_key(k);
+void tree_insert(Node **t, Key k) {
+    if (t == NULL) return;                      // Error
+    if ((*t) == NULL) {                         // Tree is empty
+        (*t) = tree_makenode(k, NULL);
     }
-    else if (key_isequal(t->key(), k)) {    // Skip duplicates
+
+        // Skip duplicates
+    else if (key_isequal((*t)->key(), k)) {
         return;
     }
-    else if (key_lessthan(k, t->key())) {    // Go to left
-        if (t->leftchild() == NULL) {
-            t->set_leftchild(tree_makenode(k, t));
+
+    // Go to left
+    else if (key_lessthan(k, (*t)->key())) {
+        if ((*t)->m_leftchild == NULL) {
+            (*t)->m_leftchild = tree_makenode(k, (*t));
         }
         else {
-            Node *leftNodeCopy = t->leftchild();
-            tree_insert(leftNodeCopy, k);
+            tree_insert(&((*t)->m_leftchild), k);
         }
     }
-    else {                                    // Go to right
-        if (t->rightchild() == NULL) {
-            t->set_rightchild(tree_makenode(k, t));
+    // Go to right
+    else {
+        if ((*t)->m_rightchild == NULL) {
+            (*t)->m_rightchild = tree_makenode(k, (*t));
         }
         else {
-            Node *rightNodeCopy = t->rightchild();
-            tree_insert(rightNodeCopy, k);
+            tree_insert(&((*t)->m_rightchild), k);
         }
     }
 
@@ -197,21 +198,27 @@ void tree_remove(Node *t, Key k) {
     else if (removeNode->num_children() == 1) {
         Node *parentNode = removeNode->parent();
         Node *childNode = NULL;
+
         // Determine if child Node is on left or right side
         childNode = (removeNode->leftchild() ? removeNode->leftchild() : removeNode->rightchild());
 
-        childNode->set_parent(parentNode); // Assign child Node to remove Node's parent
+        // Assign child Node to remove Node's parent
+        childNode->set_parent(parentNode);
+
+        // link removeNode's parentNode to removeNode's left childNode
         if (key_lessthan(removeNode->key(), parentNode->key())) {
-            parentNode->set_leftchild(childNode);                   // link to left child
+            parentNode->set_leftchild(childNode);
         }
-        else {                                                      // link to right
+
+        // link removeNode's parentNode to removeNode's right childNode
+        else {
             parentNode->set_rightchild(childNode);
         }
         delete removeNode;
         return;
     }
 
-    // Node has one child
+    // Node has two children
     else {
         removeNode->replace_with_successor();
     }

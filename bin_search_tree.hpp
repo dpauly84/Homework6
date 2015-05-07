@@ -2,7 +2,7 @@
 // Author: Derek Pauly
 // Student ID: s829f376
 // Assignment Number: 6
-// Last Changed: May 5, 2015
+// Last Changed: May 6, 2015
 
 #ifndef _BIN_SEARCH_TREE_HPP_
 #define _BIN_SEARCH_TREE_HPP_
@@ -24,7 +24,7 @@ public:
     // tree_remove must access the private methods, so it is a friend.
     friend void tree_remove(Node *t, Key k);
     // tree_insert needs access to the private data
-    friend void tree_insert(Node *&t, Key k);
+    friend void tree_insert(Node **t, Key k);
 
     // Accessors
     Key key();
@@ -56,11 +56,11 @@ private:
 typedef Node * Tree;
 
 // Function prototypes
-void tree_init(Tree &t);
+void tree_init(Tree *t);
 void tree_makenull(Tree t);
 Node *tree_makenode(Key k, Node *parent);
 Node *tree_search(Key k, Tree t);
-void tree_insert(Node* &t, Key k);
+void tree_insert(Tree *t, Key k);
 void tree_remove(Node *t, Key k);
 void tree_preorder(Node *n, std::ostream &file);
 void tree_postorder(Node *n, std::ostream &file);

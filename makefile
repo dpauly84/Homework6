@@ -12,4 +12,4 @@ tidy :
 	rm -f bin_search_tree.o core
 
 clean :
-	rm -f classlist bin_search_tree.o core
+	rm -f classlist bin_search_tree.o core classlist.txt

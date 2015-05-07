@@ -2,7 +2,7 @@
 // Author: Derek Pauly
 // Student ID: s829f376
 // Assignment Number: 6
-// Last Changed: May 5, 2015
+// Last Changed: May 6, 2015
 
 // Program reads student names from the class enrollment file and stores them in a
 // binary search tree, disregarding duplicates. The program then reads name from
@@ -25,7 +25,7 @@ int main() {
     ifstream dropFile(DROPLIST_FILE);
     ofstream outFile(outFileName);
 
-    Tree myTree = new Node;
+    Tree * myTree = new Tree;
     tree_init(myTree);
 
     // Ensure both input files are opened correctly
@@ -45,17 +45,17 @@ int main() {
     outFile << "Class List for CS 300:" << endl;
 
     // Write contents of tree to outFile with inorder traversal
-    tree_inorder(myTree, outFile);
+    tree_inorder(*myTree, outFile);
 
     cout << "The class list was saved in the file classlist.txt" << endl;
 
-    tree_makenull(myTree);
+    tree_makenull(*myTree);
 
     return EXIT_SUCCESS;
 }
 
 // Remove students who are in the file from the tree.
-bool remove_drop_students(std::ifstream &inFile, Tree &t) {
+bool remove_drop_students(std::ifstream &inFile, Tree *t) {
     Key student; // student to be removed from tree
     string line; // Line from file
     bool flag;
@@ -65,14 +65,14 @@ bool remove_drop_students(std::ifstream &inFile, Tree &t) {
         getline(inFile, line);
         if (line.length() > 0) { // ensure something was read into the line
             student = read_student_record(line);
-            tree_remove(t, student);
+            tree_remove(*t, student);
         }
     }
     return flag;
 }
 
 // Reads student names from file and inserts them into a binary search tree.
-bool student_file_to_tree(ifstream &inFile, Tree &t) {
+bool student_file_to_tree(ifstream &inFile, Tree *t) {
     Key student; // student to be inserted into tree
     string line; // Line from file
     bool flag;
