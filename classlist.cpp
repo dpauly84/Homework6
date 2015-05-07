@@ -35,10 +35,8 @@ int main() {
     }
 
     // Load enrollFile students into binary search tree
-    if (!student_file_to_tree(enrollFile, myTree)) {
-        cout << "Enrollment file not successully loaded into binary tree" << endl;
-        exit(EXIT_FAILURE);
-    }
+    student_file_to_tree(enrollFile, myTree);
+
     // Remove drop students from binary search tree
     remove_drop_students(dropFile, myTree);
 
@@ -49,43 +47,45 @@ int main() {
 
     cout << "The class list was saved in the file classlist.txt" << endl;
 
+    // cleanup
     tree_makenull(*myTree);
+    delete myTree;
+    enrollFile.close();
+    dropFile.close();
+    outFile.close();
 
     return EXIT_SUCCESS;
 }
 
 // Remove students who are in the file from the tree.
-bool remove_drop_students(std::ifstream &inFile, Tree *t) {
+void remove_drop_students(std::ifstream &inFile, Tree *t) {
     Key student; // student to be removed from tree
     string line; // Line from file
-    bool flag;
-    flag = (t != NULL);
 
-    while (!inFile.eof() && flag) { // stop when end of file (EOF) is reached
+    while (!inFile.eof()) { // stop when end of file (EOF) is reached
         getline(inFile, line);
         if (line.length() > 0) { // ensure something was read into the line
             student = read_student_record(line);
             tree_remove(*t, student);
         }
     }
-    return flag;
+
 }
 
 // Reads student names from file and inserts them into a binary search tree.
-bool student_file_to_tree(ifstream &inFile, Tree *t) {
+void student_file_to_tree(ifstream &inFile, Tree *t) {
     Key student; // student to be inserted into tree
     string line; // Line from file
-    bool flag;
-    flag = (t != NULL);
 
-    while (!inFile.eof() && flag) { // stop when end of file (EOF) is reached
+
+    while (!inFile.eof()) { // stop when end of file (EOF) is reached
         getline(inFile, line);
         if (line.length() > 0) { // ensure something was read into the line
             student = read_student_record(line);
             tree_insert(t, student);
         }
     }
-    return flag;
+
 }
 
 

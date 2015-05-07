@@ -39,8 +39,6 @@ public:
     void set_leftchild(Node *l);
     void set_rightchild(Node *r);
 
-
-
 private:
     // Private methods
     void replace_with_successor();

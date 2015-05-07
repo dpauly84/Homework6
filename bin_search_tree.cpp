@@ -102,13 +102,11 @@ void tree_init(Tree *t) {
 
 // Delete all nodes of a tree - traverse in postorder to delete each child before its parent
 void tree_makenull(Tree t) {
-    Node *current = t;
+    if (tree_empty(t)) return;
 
-    if (t) {
-        tree_makenull(t->leftchild());
-        tree_makenull(t->rightchild());
-        delete current;
-    }
+    tree_makenull(t->leftchild());
+    tree_makenull(t->rightchild());
+    delete t;
 }
 
 // create a new node for a tree
@@ -226,37 +224,26 @@ void tree_remove(Node *t, Key k) {
 
 // traverse tree in preorder and write keys to file
 void tree_preorder(Node *n, std::ostream &os) {
-    if (n != NULL && tree_empty(n)) {
-        os << "Tree is empty" << std::endl;
-        return;
-    }
-    if (n) {
+    if (tree_empty(n)) return;
+
         os << n->key() << std::endl;
         tree_preorder(n->leftchild(), os);
         tree_preorder(n->rightchild(), os);
-    }
 }
 
 // traverse tree in postorder and write keys to file
 void tree_postorder(Node *n, std::ostream &os) {
-    if (n != NULL && tree_empty(n)) {
-        os << "Tree is empty" << std::endl;
-        return;
-    }
-    if (n) {
+    if (tree_empty(n)) return;
+
         tree_postorder(n->leftchild(), os);
         tree_postorder(n->rightchild(), os);
         os << n->key() << std::endl;
-    }
 }
 
 // traverse tree in inorder and write keys to file
 void tree_inorder(Node *n, std::ostream &os) {
-    if (n != NULL && tree_empty(n)) {
-        os << "Tree is empty" << std::endl;
-        return;
-    }
-    if (n == NULL) return;
+    if (tree_empty(n)) return;
+
     tree_inorder(n->leftchild(), os);
     os << "\n" << n->key();
     tree_inorder(n->rightchild(), os);
@@ -264,27 +251,17 @@ void tree_inorder(Node *n, std::ostream &os) {
 
 // returns true if t is empty and false otherwise
 bool tree_empty(Tree t) {
-    return t->key() == "";
+    return t == NULL;
 }
 
 // returns the height of the tree
 int tree_height(Tree t) {
-    int leftInt = 0;
-    int rightInt = 0;
-    if (tree_empty(t) || t == NULL) {
-        std::cout << "empty" << std::endl;
-        return 0;
-    }
-    if (t->rightchild()) {
-        ++rightInt;
-        std::cout << "rightInt" << rightInt << std::endl;
-        rightInt = tree_height(t->rightchild());
-    }
-    if (t->leftchild()) {
-        ++leftInt;
-        std::cout << "leftInt" << leftInt << std::endl;
-        rightInt = tree_height(t->leftchild());
-    }
+    int left_height, right_height;
 
-    return (fmax(leftInt, rightInt) + 1); // type conversion from double to int
+    if (t == NULL) return -1;
+    right_height = tree_height(t->rightchild());
+    left_height = tree_height(t->leftchild());
+
+
+    return (fmax(left_height, right_height) + 1); // type conversion from double to int
 }
